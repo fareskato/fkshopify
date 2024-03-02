@@ -65,6 +65,7 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 		}
 		products = append(products, prsRes.Products...)
 		linkHeader := res.Header.Get("Link")
+		fmt.Println(linkHeader)
 		if linkHeader == "" {
 			break
 		}
@@ -74,7 +75,7 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 		}
 		nextProductsUrl := fmt.Sprintf("%s/products.json?limit=250&fileds=%s", baseUrl, options.Fields)
 		productsUrl = fmt.Sprintf("%s&page_info=%s", nextProductsUrl, pageInfo)
-		if strings.Contains(linkHeader, `rel="next"`) {
+		if strings.Contains(linkHeader, `rel="previous"`) {
 			break
 		}
 	}
