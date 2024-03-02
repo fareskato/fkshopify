@@ -2,6 +2,7 @@ package fkshopify
 
 import "fmt"
 
+// change shopify
 type Shopify struct {
 	storeUser       string
 	storePassword   string
