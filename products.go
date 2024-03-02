@@ -65,7 +65,6 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 		}
 		products = append(products, prsRes.Products...)
 		linkHeader := res.Header.Get("Link")
-		fmt.Println(linkHeader)
 		if linkHeader == "" {
 			break
 		}
