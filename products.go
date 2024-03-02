@@ -37,6 +37,7 @@ type shopifyProductsResponse struct {
 	Products []shopifyProduct
 }
 
+// ShopifyProductsFetchOptions defines options when U fetch products from shopify store
 type ShopifyProductsFetchOptions struct {
 	Fields       string
 	CollectionID string
