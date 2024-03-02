@@ -37,7 +37,7 @@ type shopifyProductsResponse struct {
 	Products []shopifyProduct
 }
 
-type shopifyProductsFetchOptions struct {
+type ShopifyProductsFetchOptions struct {
 	Fields       string
 	CollectionID string
 }
@@ -47,7 +47,7 @@ type shopifyProductsFetchOptions struct {
 // id,title,tags,variants,vendor,published_at,body_html,status,images
 // also if U want U can fetch products of specific collection so U can pass
 // the collection id
-func (s Shopify) GetAllShopifyProducts(options shopifyProductsFetchOptions) ([]shopifyProduct, error) {
+func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]shopifyProduct, error) {
 	var products []shopifyProduct
 	var productsRes shopifyProductsResponse
 	var productsUrl string
