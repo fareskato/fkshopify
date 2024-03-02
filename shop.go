@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type Shop struct {
+type shopifyShop struct {
 	ShopifyID     int    `json:"id"`
 	Name          string `json:"name"`
 	Phone         string `json:"phone,omitempty"`
@@ -20,17 +20,17 @@ type Shop struct {
 	CustomerEmail string `json:"customer_email,omitempty"`
 }
 
-type ShopResponse struct {
-	Shop Shop `json:"shop"`
+type shopResponse struct {
+	Shop shopifyShop `json:"shop"`
 }
 
-func (s Shopify) GetShopData() (*Shop, error) {
+func (s Shopify) GetShopData() (*shopifyShop, error) {
 	res, err := http.Get(fmt.Sprintf("%s/shop.json", s.InitStoreUrl()))
 	if err != nil {
 		return nil, err
 	}
 	defer res.Body.Close()
-	var shopRes ShopResponse
+	var shopRes shopResponse
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err

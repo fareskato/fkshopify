@@ -12,13 +12,10 @@ func SanitizeHTML(input string) string {
 	// Remove HTML tags
 	re := regexp.MustCompile(`<[^>]*>`)
 	plainText := re.ReplaceAllString(input, " ")
-
 	// Decode HTML entities
 	decodedText := html.UnescapeString(plainText)
-
 	// Remove extra whitespaces
 	cleanedText := strings.Join(strings.Fields(decodedText), " ")
-
 	return cleanedText
 }
 

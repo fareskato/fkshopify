@@ -7,7 +7,7 @@ import (
 	"github.com/fareskato/fkshopify/fkhttp"
 )
 
-type Location struct {
+type shopifyLocation struct {
 	ShopifyID   int    `json:"id"`
 	Name        string `json:"name"`
 	Active      bool   `json:"active"`
@@ -20,17 +20,13 @@ type Location struct {
 	CountryName string `json:"country_name,omitempty"`
 }
 
-type LocationResponse struct {
-	Location Location `json:"location"`
+type shopifyLocationsResponse struct {
+	Locations []shopifyLocation `json:"locations"`
 }
 
-type LocationsResponse struct {
-	Locations []Location `json:"locations"`
-}
-
-func (s Shopify) GetAllShopifyLocations() ([]Location, error) {
-	var locations []Location
-	var locsRes LocationsResponse
+func (s Shopify) GetAllShopifyLocations() ([]shopifyLocation, error) {
+	var locations []shopifyLocation
+	var locsRes shopifyLocationsResponse
 	locationsUrl := fmt.Sprintf("%s/locations.json?limit=250", s.InitStoreUrl())
 	for {
 		locres, res, err := fkhttp.HttpGet(locsRes, locationsUrl)
