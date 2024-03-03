@@ -1,13 +1,15 @@
 package fkshopify
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
 	"github.com/fareskato/fkshopify/fkhttp"
 )
 
-type shopifyProductImage struct {
+type ShopifyProductImage struct {
 	Src string `json:"src"`
 }
 
@@ -30,7 +32,7 @@ type shopifyProduct struct {
 	Status      string                  `json:"status"`
 	Tags        string                  `json:"tags,omitempty"`
 	Variants    []shopifyProductVariant `json:"variants,omitempty"`
-	Images      []shopifyProductImage   `json:"images"`
+	Images      []ShopifyProductImage   `json:"images"`
 }
 
 type shopifyProductsResponse struct {
@@ -79,4 +81,20 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 		}
 	}
 	return products, nil
+}
+
+func (s Shopify) PushProductImagesToShopify(id int, images []ShopifyProductImage) error {
+	ctx := context.Background()
+	// prepare data
+	payload, err := json.Marshal(map[string]interface{}{"product": map[string]interface{}{"id": id, "images": images}})
+	if err != nil {
+		return err
+	}
+	url := fmt.Sprintf("%s/products/%d.json", s.InitStoreUrl(), id)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders("PUT", url, s.storePassword, ctx, payload)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return nil
 }

@@ -1,7 +1,10 @@
 package fkhttp
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -22,4 +25,24 @@ func HttpGet[T any](t T, url string) (*T, *http.Response, error) {
 		return nil, nil, err
 	}
 	return response, res, nil
+}
+
+func HttpShopifyRequestWithHeaders(method, url, token string, ctx context.Context, payload []byte) (*http.Response, error) {
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
+	if err != nil {
+		return nil, err
+	}
+	// set headers
+	req.Header.Set("X-Shopify-Access-Token", token)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Length", fmt.Sprint(len(payload)))
+	// context
+	req = req.WithContext(ctx)
+	// send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
