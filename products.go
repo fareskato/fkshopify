@@ -84,14 +84,20 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 	return products, nil
 }
 
-func (s Shopify) PushProductImagesToShopify(ctx context.Context, token string, id int, images []ShopifyProductImage) error {
+func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images []ShopifyProductImage) error {
 	// prepare data
-	payload, err := json.Marshal(map[string]interface{}{"product": map[string]interface{}{"id": id, "images": images}})
+	data := map[string]interface{}{
+		"product": map[string]interface{}{
+			"id":     id,
+			"images": images,
+		},
+	}
+	payload, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
 	url := fmt.Sprintf("%s/products/%d.json", s.InitStoreUrl(), id)
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, token, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, payload)
 	if err != nil {
 		return err
 	}
@@ -99,7 +105,7 @@ func (s Shopify) PushProductImagesToShopify(ctx context.Context, token string, i
 	return nil
 }
 
-func (s Shopify) PushProductCostToshopify(ctx context.Context, token string, iiid int, cost string) error {
+func (s Shopify) PushProductCostToshopify(ctx context.Context, iiid int, cost string) error {
 	// prepare data
 	data := map[string]interface{}{
 		"inventory_item": map[string]interface{}{
@@ -112,7 +118,7 @@ func (s Shopify) PushProductCostToshopify(ctx context.Context, token string, iii
 		return err
 	}
 	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiid)
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, token, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, payload)
 	if err != nil {
 		return err
 	}
