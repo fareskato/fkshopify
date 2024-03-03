@@ -21,7 +21,7 @@ func (s Shopify) verifyWebHook(data []byte) bool {
 	}
 	return hmac.Equal(expectedHMAC, decodedHMAC)
 }
-func WebHookCreateEntity[T any](s Shopify, t T, reqBody io.ReadCloser) (*T, error) {
+func WebHookCreateEntity[T any](s Shopify, t T, reqBody io.Reader) (*T, error) {
 	var whPayload T
 	if s.storeWebHookKey == "" {
 		return nil, fkutils.ErrWebHookMissed
