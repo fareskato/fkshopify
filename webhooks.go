@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
-	"io"
 
 	"github.com/fareskato/fkshopify/fkutils"
 )
@@ -21,7 +20,7 @@ func (s Shopify) verifyWebHook(data []byte) bool {
 	}
 	return hmac.Equal(expectedHMAC, decodedHMAC)
 }
-func WebHookCreateEntity[T any](s Shopify, t T, reqBody io.Reader) (*T, error) {
+func WebHookCreateEntity[T any](s Shopify, t T, reqBody []byte) (*T, error) {
 	var whPayload T
 	if s.storeWebHookKey == "" {
 		return nil, fkutils.ErrWebHookMissed
@@ -29,14 +28,11 @@ func WebHookCreateEntity[T any](s Shopify, t T, reqBody io.Reader) (*T, error) {
 	if s.hmacHeader == "" {
 		return nil, fkutils.ErrHmacHeaderMissed
 	}
-	data, err := io.ReadAll(reqBody)
-	if err != nil {
-		return nil, err
-	}
-	if !s.verifyWebHook(data) {
+
+	if !s.verifyWebHook(reqBody) {
 		return nil, fkutils.ErrInvalidWebHookKey
 	}
-	err = json.Unmarshal(data, &whPayload)
+	err := json.Unmarshal(reqBody, &whPayload)
 	if err != nil {
 		return nil, err
 	}
