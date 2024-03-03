@@ -27,13 +27,13 @@ func HttpGet[T any](t T, url string) (*T, *http.Response, error) {
 	return response, res, nil
 }
 
-func HttpShopifyRequestWithHeaders(method, url, token string, ctx context.Context, payload []byte) (*http.Response, error) {
+func HttpShopifyRequestWithHeaders(method, url string, ctx context.Context, payload []byte) (*http.Response, error) {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}
 	// set headers
-	req.Header.Set("X-Shopify-Access-Token", token)
+	// req.Header.Set("X-Shopify-Access-Token", token)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Length", fmt.Sprint(len(payload)))
 	// context

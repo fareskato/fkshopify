@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/fareskato/fkshopify/fkhttp"
@@ -83,18 +84,40 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 	return products, nil
 }
 
-func (s Shopify) PushProductImagesToShopify(id int, images []ShopifyProductImage) error {
-	ctx := context.Background()
+func (s Shopify) PushProductImagesToShopify(id int, ctx context.Context, images []ShopifyProductImage) error {
 	// prepare data
 	payload, err := json.Marshal(map[string]interface{}{"product": map[string]interface{}{"id": id, "images": images}})
 	if err != nil {
 		return err
 	}
 	url := fmt.Sprintf("%s/products/%d.json", s.InitStoreUrl(), id)
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders("PUT", url, s.storePassword, ctx, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, url, ctx, payload)
+	// resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, url, s.storePassword, ctx, payload)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
+	return nil
+}
+
+func (s Shopify) PushProductCostToshopify(ctx context.Context, iiid int, cost string) error {
+	// prepare data
+	data := map[string]interface{}{
+		"inventory_item": map[string]interface{}{
+			"inventory_item_id": iiid,
+			"cost":              cost,
+		},
+	}
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiid)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, url, ctx, payload)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	// all good
 	return nil
 }
