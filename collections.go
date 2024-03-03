@@ -20,7 +20,7 @@ type shopifyCollectionResponse struct {
 func (s Shopify) GetShopifyCollection(id string) (*shopifyCollection, error) {
 	var colRes shopifyCollectionResponse
 	colUrl := fmt.Sprintf("%s/collections/%s.json", s.InitStoreUrl(), id)
-	colres, res, err := fkhttp.HttpGet(colRes, colUrl)
+	colres, res, err := fkhttp.HttpShopifyGet(colRes, colUrl)
 	if err != nil {
 		return nil, err
 	}

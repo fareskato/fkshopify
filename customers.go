@@ -36,7 +36,7 @@ func (s Shopify) GetAllShopifyCustomers() ([]shopifyCustomer, error) {
 	var customersRes shopifyCustomersResponse
 	customersUrl := fmt.Sprintf("%s/customers.json?limit=250", s.InitStoreUrl())
 	for {
-		customersres, res, err := fkhttp.HttpGet(customersRes, customersUrl)
+		customersres, res, err := fkhttp.HttpShopifyGet(customersRes, customersUrl)
 		if err != nil {
 			return nil, err
 		}

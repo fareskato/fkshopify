@@ -29,7 +29,7 @@ func (s Shopify) GetAllShopifyLocations() ([]shopifyLocation, error) {
 	var locsRes shopifyLocationsResponse
 	locationsUrl := fmt.Sprintf("%s/locations.json?limit=250", s.InitStoreUrl())
 	for {
-		locres, res, err := fkhttp.HttpGet(locsRes, locationsUrl)
+		locres, res, err := fkhttp.HttpShopifyGet(locsRes, locationsUrl)
 		if err != nil {
 			return nil, err
 		}

@@ -62,7 +62,7 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 		productsUrl = fmt.Sprintf("%s/products.json?&limit=250&fields=%s", baseUrl, options.Fields)
 	}
 	for {
-		prsRes, res, err := fkhttp.HttpGet(productsRes, productsUrl)
+		prsRes, res, err := fkhttp.HttpShopifyGet(productsRes, productsUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -105,11 +105,12 @@ func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images 
 	return nil
 }
 
-func (s Shopify) PushProductCostToshopify(ctx context.Context, iiid int, cost string) error {
+// PushProductCostToshopify will update the cost per item value.
+func (s Shopify) PushProductCost(ctx context.Context, iiID int, cost string) error {
 	// prepare data
 	data := map[string]interface{}{
 		"inventory_item": map[string]interface{}{
-			"inventory_item_id": iiid,
+			"inventory_item_id": iiID,
 			"cost":              cost,
 		},
 	}
@@ -117,8 +118,29 @@ func (s Shopify) PushProductCostToshopify(ctx context.Context, iiid int, cost st
 	if err != nil {
 		return err
 	}
-	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiid)
+	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiID)
 	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, payload)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	// all good
+	return nil
+}
+
+func (s Shopify) PushProductQty(ctx context.Context, locID, iiID, qty int) error {
+	// prepare data
+	data := map[string]interface{}{
+		"location_id":       locID,
+		"inventory_item_id": iiID,
+		"available":         qty,
+	}
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	url := fmt.Sprintf("%s/inventory_levels/set.json", s.InitStoreUrl())
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPost, ctx, url, payload)
 	if err != nil {
 		return err
 	}

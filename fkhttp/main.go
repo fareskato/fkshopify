@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func HttpGet[T any](t T, url string) (*T, *http.Response, error) {
+func HttpShopifyGet[T any](t T, url string) (*T, *http.Response, error) {
 	var response *T
 	res, err := http.Get(url)
 	if err != nil {
