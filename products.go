@@ -84,6 +84,7 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 	return products, nil
 }
 
+// PushProductImagesToShopify delets the old images and create the passed images slice
 func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images []ShopifyProductImage) error {
 	// prepare data
 	data := map[string]interface{}{
@@ -128,6 +129,7 @@ func (s Shopify) PushProductCost(ctx context.Context, iiID int, cost string) err
 	return nil
 }
 
+// PushProductQty updated the product qty which needed the location id.
 func (s Shopify) PushProductQty(ctx context.Context, locID, iiID, qty int) error {
 	// prepare data
 	data := map[string]interface{}{

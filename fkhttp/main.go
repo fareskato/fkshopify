@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// HttpShopifyGet send get request to shopify and return the requested resource.
 func HttpShopifyGet[T any](t T, url string) (*T, *http.Response, error) {
 	var response *T
 	res, err := http.Get(url)
@@ -27,6 +28,8 @@ func HttpShopifyGet[T any](t T, url string) (*T, *http.Response, error) {
 	return response, res, nil
 }
 
+// HttpShopifyRequestWithHeaders general purpose function sends(get, post, put)
+// to interact with shopify admin rest api.
 func HttpShopifyRequestWithHeaders(method string, ctx context.Context, url string, payload []byte) (*http.Response, error) {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err != nil {

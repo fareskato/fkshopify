@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// SanitizeHTML removes html tags, decode html entities and
+// remove extra white spaces.
 func SanitizeHTML(input string) string {
 	// Remove HTML tags
 	re := regexp.MustCompile(`<[^>]*>`)

@@ -24,6 +24,7 @@ type shopResponse struct {
 	Shop shopifyShop `json:"shop"`
 }
 
+// GetShopData returns the store data(in case if needed)
 func (s Shopify) GetShopData() (*shopifyShop, error) {
 	res, err := http.Get(fmt.Sprintf("%s/shop.json", s.InitStoreUrl()))
 	if err != nil {
