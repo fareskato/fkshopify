@@ -9,6 +9,9 @@ import (
 	"github.com/fareskato/fkshopify/fkutils"
 )
 
+// verifyWebHook takes the request bosdy and the X-Shopify-Hmac-SHA256 header sended
+// by the web hook so U need to extract the X-Shopify-Hmac-SHA256 header
+// from the request then pass it to the function
 func (s Shopify) verifyWebHook(data []byte, hmacHeader string) bool {
 	secret := []byte(s.storeWebHookKey)
 	computedHMAC := hmac.New(sha256.New, secret)

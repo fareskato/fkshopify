@@ -37,10 +37,3 @@ func (s Shopify) InitStoreHeaders() map[string]string {
 		"X-Shopify-Access-Token": s.storePassword,
 	}
 }
-
-// func (s Shopify) InitWebHook(hm, k string) fkwebhooks.WebHook {
-// 	return fkwebhooks.WebHook{
-// 		HmacHeader: hm,
-// 		Key:        k,
-// 	}
-// }
