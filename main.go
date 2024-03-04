@@ -10,7 +10,6 @@ type Shopify struct {
 	storeName       string
 	storeApiVersion string
 	storeWebHookKey string
-	hmacHeader      string
 }
 
 // init the store with store credentials so U can interact
@@ -22,7 +21,6 @@ func New(su, sp, sn, apiV, swhk string) Shopify {
 		storeName:       sn,
 		storeApiVersion: apiV,
 		storeWebHookKey: swhk,
-		hmacHeader:      "X-Shopify-Hmac-SHA256",
 	}
 }
 
