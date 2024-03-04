@@ -21,7 +21,6 @@ func (s Shopify) verifyWebHook(data []byte) bool {
 	return hmac.Equal(expectedHMAC, decodedHMAC)
 }
 func WebHookCreateEntity[T any](s Shopify, t T, reqBody []byte) (*T, error) {
-	var whPayload T
 	if s.storeWebHookKey == "" {
 		return nil, fkutils.ErrWebHookMissed
 	}
@@ -32,9 +31,9 @@ func WebHookCreateEntity[T any](s Shopify, t T, reqBody []byte) (*T, error) {
 	if !s.verifyWebHook(reqBody) {
 		return nil, fkutils.ErrInvalidWebHookKey
 	}
-	err := json.Unmarshal(reqBody, &whPayload)
+	err := json.Unmarshal(reqBody, &t)
 	if err != nil {
 		return nil, err
 	}
-	return &whPayload, nil
+	return &t, nil
 }
