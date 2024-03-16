@@ -88,7 +88,7 @@ func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images 
 	// prepare data
 	type Data map[string]any
 	data := Data{
-		"product": map[string]interface{}{
+		"product": map[string]any{
 			"id":     id,
 			"images": images,
 		},
@@ -107,15 +107,11 @@ func (s Shopify) PushProductCost(ctx context.Context, iiID int, cost string) err
 	// prepare data
 	type Data map[string]any
 	data := Data{
-		"inventory_item": map[string]interface{}{
+		"inventory_item": map[string]any{
 			"inventory_item_id": iiID,
 			"cost":              cost,
 		},
 	}
-	// payload, err := json.Marshal(data)
-	// if err != nil {
-	// 	return err
-	// }
 	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiID)
 	resp, err := fkhttp.HttpShopifyRequestWithHeaders(ctx, http.MethodPut, url, data)
 	if err != nil {
@@ -135,10 +131,6 @@ func (s Shopify) PushProductQty(ctx context.Context, locID, iiID, qty int) error
 		"inventory_item_id": iiID,
 		"available":         qty,
 	}
-	// payload, err := json.Marshal(data)
-	// if err != nil {
-	// 	return err
-	// }
 	url := fmt.Sprintf("%s/inventory_levels/set.json", s.InitStoreUrl())
 	resp, err := fkhttp.HttpShopifyRequestWithHeaders(ctx, http.MethodPost, url, data)
 	if err != nil {
