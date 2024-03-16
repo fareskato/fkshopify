@@ -2,7 +2,6 @@ package fkshopify
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -87,18 +86,15 @@ func (s Shopify) GetAllShopifyProducts(options ShopifyProductsFetchOptions) ([]s
 // PushProductImagesToShopify delets the old images and create the passed images slice
 func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images []ShopifyProductImage) error {
 	// prepare data
-	data := map[string]interface{}{
+	type Data map[string]any
+	data := Data{
 		"product": map[string]interface{}{
 			"id":     id,
 			"images": images,
 		},
 	}
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return err
-	}
 	url := fmt.Sprintf("%s/products/%d.json", s.InitStoreUrl(), id)
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(ctx, http.MethodPut, url, data)
 	if err != nil {
 		return err
 	}
@@ -109,18 +105,19 @@ func (s Shopify) PushProductImagesToShopify(ctx context.Context, id int, images 
 // PushProductCostToshopify will update the cost per item value.
 func (s Shopify) PushProductCost(ctx context.Context, iiID int, cost string) error {
 	// prepare data
-	data := map[string]interface{}{
+	type Data map[string]any
+	data := Data{
 		"inventory_item": map[string]interface{}{
 			"inventory_item_id": iiID,
 			"cost":              cost,
 		},
 	}
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return err
-	}
+	// payload, err := json.Marshal(data)
+	// if err != nil {
+	// 	return err
+	// }
 	url := fmt.Sprintf("%s/inventory_items/%d.json", s.InitStoreUrl(), iiID)
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPut, ctx, url, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(ctx, http.MethodPut, url, data)
 	if err != nil {
 		return err
 	}
@@ -132,17 +129,18 @@ func (s Shopify) PushProductCost(ctx context.Context, iiID int, cost string) err
 // PushProductQty updated the product qty which needed the location id.
 func (s Shopify) PushProductQty(ctx context.Context, locID, iiID, qty int) error {
 	// prepare data
-	data := map[string]interface{}{
+	type Data map[string]any
+	data := Data{
 		"location_id":       locID,
 		"inventory_item_id": iiID,
 		"available":         qty,
 	}
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return err
-	}
+	// payload, err := json.Marshal(data)
+	// if err != nil {
+	// 	return err
+	// }
 	url := fmt.Sprintf("%s/inventory_levels/set.json", s.InitStoreUrl())
-	resp, err := fkhttp.HttpShopifyRequestWithHeaders(http.MethodPost, ctx, url, payload)
+	resp, err := fkhttp.HttpShopifyRequestWithHeaders(ctx, http.MethodPost, url, data)
 	if err != nil {
 		return err
 	}
