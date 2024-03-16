@@ -24,15 +24,15 @@ type shopifyProductVariant struct {
 }
 
 type shopifyProduct struct {
-	ShopifyID   int                     `json:"id"`
-	Title       string                  `json:"title"`
-	PublishedAt string                  `json:"published_at"`
-	BodyHtml    string                  `json:"body_html"`
-	Vendor      string                  `json:"vendor"`
-	Status      string                  `json:"status"`
+	ShopifyID   int                     `json:"id,omitempty"`
+	Title       string                  `json:"title,omitempty"`
+	PublishedAt string                  `json:"published_at,omitempty"`
+	BodyHtml    string                  `json:"body_html,omitempty"`
+	Vendor      string                  `json:"vendor,omitempty"`
+	Status      string                  `json:"status,omitempty"`
 	Tags        string                  `json:"tags,omitempty"`
 	Variants    []shopifyProductVariant `json:"variants,omitempty"`
-	Images      []ShopifyProductImage   `json:"images"`
+	Images      []ShopifyProductImage   `json:"images,omitempty"`
 }
 
 type shopifyProductsResponse struct {
